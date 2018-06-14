@@ -1,10 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const readMongoUrl = require('../config').mongodb_url;
-const writeMongoUrl = require('../config').mongodb_write_url;
+const mongoUrl = require('../config').mongodb_url;
 
-let readDBPromise;
-let writeDBPromise;
+let DBPromise;
 
 module.exports = {
   connectToServer: function(url) {
@@ -13,20 +11,13 @@ module.exports = {
         if (err) { reject(err); }
         resolve(db);
       });
-    });
+    }).catch((err) => console.warn(err));
   },
 
-  get read() {
-    if (!readDBPromise) {
-      readDBPromise = this.connectToServer(readMongoUrl);
+  get db() {
+    if (!DBPromise) {
+      DBPromise = this.connectToServer(mongoUrl);
     }
-    return readDBPromise;
-  },
-
-  get write() {
-    if (!writeDBPromise) {
-      writeDBPromise = this.connectToServer(writeMongoUrl);
-    }
-    return writeDBPromise;
+    return DBPromise;
   }
 };
