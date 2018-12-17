@@ -17,16 +17,21 @@ const replaceRoot = {
       _id: "$_id",
       name: "$name.long",
       nutrients: {
-        $map: {
-          input: filterConditions,
-          as: 'nutrient',
-          in: {
-            code: '$$nutrient.code',
-            name: '$$nutrient.name',
-            value: '$$nutrient.value',
-            units: '$$nutrient.units',
-          }
-        },
+        $arrayToObject: {
+          $map: {
+            input: filterConditions,
+            as: 'nutrient',
+            in: {
+              k: "$$nutrient.code",
+              v: {
+                code: '$$nutrient.code',
+                name: '$$nutrient.name',
+                value: '$$nutrient.value',
+                units: '$$nutrient.units'
+              }
+            }
+          },
+        }
       }
     }
   }
